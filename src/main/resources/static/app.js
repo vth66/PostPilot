@@ -48,6 +48,10 @@ const state = {
   wischen: null,
   bank: { gruppen: [], accounts: [] },
   genres: [],
+  // Gewählte Gegend („siegerland", „shanghai", …) oder "" für keinen lokalen Bezug. Steht
+  // hier und nicht nur im Auswahlfeld, weil die Auswahl erst existiert, wenn die Bank
+  // geladen ist — ein gespeicherter Entwurf kommt oft vorher an.
+  region: "",
   vorschauIndex: 0
 };
 
@@ -270,12 +274,14 @@ function setzeArbeitsbereichZurueck() {
   state.hashtags = [];
   state.ort = null;
   state.genres = [];
+  state.region = "";
   state.vorschauIndex = 0;
   $("caption").value = "";
   $("hashtag-bloecke").innerHTML = "";
   $("hashtag-hinweis").textContent = "";
   $("ort-suche").value = "";
   zeichneGenreChips();
+  zeichneRegionen();
   zeichneHashtags();
 }
 
@@ -1052,7 +1058,10 @@ function zeichneOrte() {
     zeile.appendChild(text);
     zeile.addEventListener("click", () => {
       state.ort = ort;
-      if (ort.region) $("hashtag-region").value = ort.region;
+      if (ort.region) {
+        state.region = ort.region;
+        zeichneRegionen();
+      }
       zeichneOrte();
       zeichneVorschau();
     });
@@ -1098,6 +1107,38 @@ async function ladeHashtagBank() {
     return;
   }
   zeichneGenreChips();
+  zeichneRegionen();
+}
+
+/**
+ * Baut die Regionsauswahl aus der Hashtag-Bank. Vorher standen die drei Gegenden fest im
+ * HTML — eine neue regionale Gruppe in hashtags.json war damit nicht erreichbar, es hätte
+ * jedes Mal eine Code-Änderung gebraucht. Jetzt genügt der Eintrag in der Bank.
+ */
+function zeichneRegionen() {
+  const auswahl = $("hashtag-region");
+  auswahl.innerHTML = "";
+  const keine = document.createElement("option");
+  keine.value = "";
+  keine.textContent = "kein lokaler Bezug";
+  auswahl.appendChild(keine);
+
+  for (const gruppe of state.bank.gruppen) {
+    if (gruppe.typ !== "REGIONAL" || !gruppe.region) continue;
+    const option = document.createElement("option");
+    option.value = gruppe.region;
+    option.textContent = gruppe.name;
+    auswahl.appendChild(option);
+  }
+
+  // Eine Gegend, die es in der Bank nicht gibt, lässt sich nicht auswählen — dann steht hier
+  // wieder „kein lokaler Bezug". Nur solange die Bank noch nicht geladen ist, bleibt die
+  // gemerkte Gegend stehen: sonst würde ein Entwurf, der vor der Bank ankommt, seine Gegend
+  // genau hier verlieren.
+  const geladen = state.bank.gruppen.length > 0;
+  const vorhanden = Array.from(auswahl.options).some((o) => o.value === state.region);
+  if (geladen && !vorhanden) state.region = "";
+  auswahl.value = vorhanden ? state.region : "";
 }
 
 function zeichneGenreChips() {
@@ -1120,7 +1161,7 @@ function zeichneGenreChips() {
 /** Holt den Regelvorschlag vom Server und zeigt ihn nach Kategorien getrennt. */
 async function holeHashtagVorschlag() {
   const parameter = new URLSearchParams();
-  const region = $("hashtag-region").value;
+  const region = state.region;
   if (region) parameter.set("region", region);
   for (const genre of state.genres) parameter.append("genres", genre);
   parameter.set("presse", $("hashtag-presse").checked ? "true" : "false");
@@ -1661,7 +1702,7 @@ function entwurfText() {
     hashtags: state.hashtags,
     genres: state.genres,
     ort: state.ort,
-    region: $("hashtag-region").value,
+    region: state.region,
     presse: $("hashtag-presse").checked,
     reichweite: $("hashtag-reichweite").checked,
     archivName: $("archiv-name").value,
@@ -1716,7 +1757,7 @@ async function ladeEntwurf() {
     state.ort = entwurf.ort || null;
 
     $("caption").value = state.caption;
-    if (entwurf.region) $("hashtag-region").value = entwurf.region;
+    state.region = typeof entwurf.region === "string" ? entwurf.region : "";
     $("hashtag-presse").checked = !!entwurf.presse;
     if (entwurf.reichweite !== undefined) {
       $("hashtag-reichweite").checked = !!entwurf.reichweite;
@@ -1730,6 +1771,7 @@ async function ladeEntwurf() {
     // Bank und Orte laden nebenher; wer zuerst fertig ist, zeichnet mit dem Stand von
     // hier, der andere zeichnet danach noch einmal.
     zeichneGenreChips();
+    zeichneRegionen();
     if (state.orte.length > 0) zeichneOrte();
     zeichneHashtags();
   }
@@ -1963,6 +2005,10 @@ function starte() {
   $("caption").addEventListener("input", (ereignis) => {
     state.caption = ereignis.target.value;
     zeichneVorschau();
+  });
+
+  $("hashtag-region").addEventListener("change", (ereignis) => {
+    state.region = ereignis.target.value;
   });
 
   $("hashtag-vorschlag").addEventListener("click", () => holeHashtagVorschlag());

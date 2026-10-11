@@ -24,6 +24,12 @@
     "region" : "sauerland",
     "tags" : [ "#sauerland", "#sauerland_impressionen", "#sauerlandliebe", "#rothaarsteig", "#rothaargebirge", "#kahlerasten", "#winterberg", "#ig_sauerland", "#sauerlandmachtglücklich" ]
   }, {
+    "id" : "shanghai",
+    "name" : "Shanghai / China",
+    "typ" : "REGIONAL",
+    "region" : "shanghai",
+    "tags" : [ "#shanghai", "#shanghaitower", "#lujiazui", "#pudong", "#jinmaotower", "#shanghainight", "#chinatravel" ]
+  }, {
     "id" : "presse",
     "name" : "Presse / Magazin (nur bei starken Motiven)",
     "typ" : "PRESSE",
@@ -48,11 +54,17 @@
     "region" : null,
     "tags" : [ "#macrophotography", "#macro_captures", "#closeupphotography", "#dewdrops" ]
   }, {
+    "id" : "stadt",
+    "name" : "Stadt / Architektur",
+    "typ" : "GENRE",
+    "region" : null,
+    "tags" : [ "#cityscapephotography", "#architecturephotography", "#urbanphotography", "#fromabove" ]
+  }, {
     "id" : "stimmung",
     "name" : "Wetter / Jahreszeit",
     "typ" : "GENRE",
     "region" : null,
-    "tags" : [ "#morgenstimmung", "#herbststimmung", "#winterwonderland", "#frühlingserwachen", "#morgenspaziergang" ]
+    "tags" : [ "#morgenstimmung", "#herbststimmung", "#winterwonderland", "#frühlingserwachen", "#morgenspaziergang", "#bluehour" ]
   }, {
     "id" : "reichweite",
     "name" : "Internationale Reichweite (sparsam)",
