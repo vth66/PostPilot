@@ -1,0 +1,46 @@
+[ {
+  "id" : "b3a1c0d2-0001-4a00-9000-000000000001",
+  "name" : "Alter Flecken, Freudenberg",
+  "kategorie" : "Historische Altstadt",
+  "latitude" : 50.9003,
+  "longitude" : 7.8756,
+  "instagramName" : "Alter Flecken Freudenberg",
+  "notiz" : "Fachwerkzeile, beste Sicht vom Kuhlenberg",
+  "region" : "siegerland"
+}, {
+  "id" : "b3a1c0d2-0002-4a00-9000-000000000002",
+  "name" : "Kahler Asten",
+  "kategorie" : "Berg",
+  "latitude" : 51.1817,
+  "longitude" : 8.4894,
+  "instagramName" : "Kahler Asten",
+  "notiz" : "Nightscapes, wenig Streulicht",
+  "region" : "sauerland"
+}, {
+  "id" : "b3a1c0d2-0003-4a00-9000-000000000003",
+  "name" : "Gillerturm, Hilchenbach",
+  "kategorie" : "Aussichtsturm",
+  "latitude" : 50.9931,
+  "longitude" : 8.0764,
+  "instagramName" : null,
+  "notiz" : "Turmspitze beim Pano-Split schützen",
+  "region" : "siegerland"
+}, {
+  "id" : "b3a1c0d2-0004-4a00-9000-000000000004",
+  "name" : "Rothaarsteig",
+  "kategorie" : "Wanderweg",
+  "region" : "sauerland",
+  "latitude" : 51.0333,
+  "longitude" : 8.3167,
+  "instagramName" : null,
+  "notiz" : null
+}, {
+  "id" : "b3a1c0d2-0005-4a00-9000-000000000005",
+  "name" : "Siegerland",
+  "kategorie" : "Region",
+  "region" : "siegerland",
+  "latitude" : 50.8747,
+  "longitude" : 8.0243,
+  "instagramName" : null,
+  "notiz" : "Fällt zurück, wenn kein konkreter Ort passt"
+} ]

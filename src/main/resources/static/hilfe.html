@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PostPilot — Anleitung</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2315171F'/%3E%3Cpath d='M3 18 L9 9 L13 14 L16 10 L21 18 Z' fill='%23E2A54A'/%3E%3Ccircle cx='17' cy='6.5' r='2.4' fill='%23E2A54A'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #15171F; --panel: #1B1D26; --panel-2: #22242E;
+      --border: #33363F; --border-soft: #2A2C36;
+      --text: #F2F3F7; --text-dim: #A9ADBA; --text-faint: #6E7280;
+      --accent: #E2A54A; --accent-ink: #241A06; --teal: #4FC3D9;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-size: 15px; line-height: 1.6;
+    }
+    .kopf {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 28px; border-bottom: 1px solid var(--border-soft);
+      position: sticky; top: 0; background: var(--bg); z-index: 10;
+    }
+    .wortmarke { font-size: 16px; font-weight: 700; }
+    .wortmarke small { display: block; font-size: 10px; color: var(--text-faint); letter-spacing: .04em; }
+    .zurueck {
+      margin-left: auto; color: var(--accent-ink); background: var(--accent);
+      text-decoration: none; border-radius: 9px; padding: 8px 16px;
+      font-size: 13px; font-weight: 600;
+    }
+    .rahmen { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 36px; padding: 28px; }
+    nav { position: sticky; top: 90px; align-self: start; font-size: 13.5px; }
+    nav a { display: block; color: var(--text-dim); text-decoration: none; padding: 5px 0; }
+    nav a:hover { color: var(--accent); }
+    main { max-width: 74ch; padding-bottom: 80px; }
+    h1 { font-size: 26px; margin: 0 0 6px; }
+    h2 {
+      font-size: 19px; margin: 40px 0 10px; padding-top: 14px;
+      border-top: 1px solid var(--border-soft);
+    }
+    h3 { font-size: 15.5px; margin: 24px 0 6px; color: var(--accent); }
+    p, li { color: var(--text-dim); }
+    strong { color: var(--text); font-weight: 600; }
+    code {
+      background: var(--panel-2); border: 1px solid var(--border-soft);
+      border-radius: 5px; padding: 1px 6px; font-size: 13px;
+      font-family: Consolas, "SF Mono", monospace; color: var(--text);
+    }
+    .kasten {
+      background: var(--panel); border: 1px solid var(--border-soft);
+      border-left: 3px solid var(--teal);
+      border-radius: 10px; padding: 14px 16px; margin: 18px 0;
+    }
+    .kasten.warnung { border-left-color: var(--accent); }
+    .kasten p:first-child { margin-top: 0; }
+    .kasten p:last-child { margin-bottom: 0; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+    th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+    th { color: var(--text-faint); font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; }
+    td { color: var(--text-dim); }
+    .taste {
+      display: inline-block; background: var(--panel-2); border: 1px solid var(--border);
+      border-bottom-width: 2px; border-radius: 5px; padding: 1px 7px;
+      font-size: 12.5px; color: var(--text);
+    }
+    @media (max-width: 900px) {
+      .rahmen { grid-template-columns: 1fr; }
+      nav { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="kopf">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M3 18 L9 9 L13 14 L16 10 L21 18 Z" fill="#E2A54A" opacity="0.9"/>
+    <circle cx="17" cy="6.5" r="2.4" fill="#E2A54A"/>
+  </svg>
+  <div class="wortmarke">PostPilot<small>ANLEITUNG</small></div>
+  <a class="zurueck" href="index.html">Zurück zur App</a>
+</header>
+
+<div class="rahmen">
+  <nav>
+    <a href="#start">Schnellstart</a>
+    <a href="#zuschnitt">1 · Zuschnitt</a>
+    <a href="#spielarten">Die drei Spielarten</a>
+    <a href="#pano">Pano-Split verstehen</a>
+    <a href="#text">2 · Text &amp; Hashtags</a>
+    <a href="#vorschau">Die Handy-Vorschau</a>
+    <a href="#export">Export: ZIP oder Datenordner</a>
+    <a href="#entwurf">Arbeitsstand bleibt erhalten</a>
+    <a href="#archiv">3 · Archiv</a>
+    <a href="#chat">Zusammenspiel mit dem Chat</a>
+    <a href="#klemmt">Wenn etwas klemmt</a>
+    <a href="#zahlen">Instagram-Zahlen</a>
+  </nav>
+
+  <main>
+    <h1>PostPilot — Anleitung</h1>
+    <p>Fotos zuschneiden, Carousel bauen, Text und Hashtags vorbereiten, exportieren, archivieren.
+      Alles läuft auf deiner eigenen NAS; nichts verlässt dein Netz.</p>
+
+    <h2 id="start">Schnellstart</h2>
+    <ol>
+      <li>Links auf <strong>Hochladen</strong> und ein oder mehrere Fotos wählen.</li>
+      <li>Oben das <strong>Format des Posts</strong> festlegen — in aller Regel <strong>4:5 Feed</strong>.</li>
+      <li>Je Foto die <strong>Spielart</strong> wählen und den Ausschnitt mit der Maus zurechtziehen.</li>
+      <li>Reiter <strong>2 · Text &amp; Hashtags</strong>: Ort, Caption, Hashtags.</li>
+      <li>Rechts in der Handy-Vorschau durchwischen und prüfen.</li>
+      <li><strong>Bilder herunterladen (ZIP)</strong> und die Dateien in Metricool hochladen.</li>
+      <li>Nach dem Veröffentlichen: Reiter <strong>3 · Archiv</strong>, Post ablegen.</li>
+    </ol>
+
+    <h2 id="zuschnitt">1 · Zuschnitt</h2>
+
+    <h3>Das Format gilt für den ganzen Post</h3>
+    <p>Instagram zwingt allen Bildern eines Carousels das Seitenverhältnis des <em>ersten</em>
+      Bildes auf. Deshalb gibt es in PostPilot nur <strong>ein</strong> Format pro Post, nicht
+      eines je Foto. <strong>4:5</strong> nutzt die größte Fläche im Feed und ist über Metricool
+      ohnehin die Obergrenze. <strong>9:16</strong> ist das Story-Format und immer ein Einzelbild.</p>
+
+    <h3>Fotoleiste links</h3>
+    <table>
+      <tr><th>Element</th><th>Wirkung</th></tr>
+      <tr><td><strong>Zahl oben links</strong></td><td>Position im Carousel.</td></tr>
+      <tr><td><span class="taste">▲</span> <span class="taste">▼</span></td>
+        <td>Reihenfolge ändern. Sie wird gespeichert und bestimmt die Nummerierung beim Export.</td></tr>
+      <tr><td><span class="taste">⧉</span></td>
+        <td>Foto duplizieren. Die Kopie liegt direkt dahinter und lässt sich unabhängig einstellen.</td></tr>
+      <tr><td><span class="taste">×</span></td><td>Foto aus dem Post entfernen.</td></tr>
+      <tr><td><strong>Gelbe Marke unten</strong></td>
+        <td>Zeigt „Ganz" oder „Pano 3", wenn das Foto nicht einfach als Ausschnitt läuft.</td></tr>
+    </table>
+
+    <h2 id="spielarten">Die drei Spielarten je Foto</h2>
+    <p>Unter der Bühne stellst du für <em>das gerade gewählte Foto</em> ein, wie es ins
+      Carousel kommt:</p>
+
+    <h3>Ausschnitt</h3>
+    <p>Das Foto füllt den Rahmen aus, überstehende Ränder fallen weg. Den Ausschnitt
+      <strong>ziehst du mit der Maus</strong> über das Bild, bis das Motiv sitzt. Die Position
+      wird je Foto <em>und</em> je Format gemerkt — wechselst du von 4:5 auf 1:1 und zurück,
+      ist dein Ausschnitt noch da. <strong>Ausschnitt zentrieren</strong> setzt ihn zurück.</p>
+
+    <h3>Ganzes Foto</h3>
+    <p>Das komplette Bild passt in den Rahmen, nichts wird abgeschnitten; der Rest ist Freiraum.
+      Den füllst du wahlweise mit <strong>Schwarz</strong> (Vorgabe, ruhig und neutral),
+      <strong>Unscharf aus dem Foto</strong> (eine weichgezeichnete Vergrößerung des Bildes
+      selbst) oder <strong>Weiß</strong>. Die Bühne zeigt hier direkt das fertig gerechnete
+      Ergebnis vom Server — was du siehst, ist die Datei.</p>
+
+    <h3>Pano-Split</h3>
+    <p>Ein breites Foto wird in mehrere nahtlos aneinander anschließende Bilder zerlegt. Beim
+      Durchwischen scrollt man optisch durch die Szene. Das Band lässt sich
+      <strong>senkrecht verschieben</strong>; oben und unten zeigt die Abdunklung, was wegfällt.</p>
+
+    <div class="kasten">
+      <p><strong>Das Panorama-Rezept.</strong> Panorama hochladen → Spielart
+        <strong>Ganzes Foto</strong> → mit <span class="taste">⧉</span> duplizieren → bei der
+        Kopie <strong>Pano-Split</strong> wählen. Dann sieht man erst die ganze Szene und wischt
+        danach hindurch. Genau dafür gibt es den Duplizieren-Knopf.</p>
+    </div>
+
+    <h2 id="pano">Pano-Split verstehen</h2>
+    <p>Die Ausschnitte nehmen ein <strong>waagerechtes Band</strong> aus dem Foto, nicht die
+      volle Bildhöhe. Nur so lässt sich auch ein gewöhnliches 3:2-Foto aus der Kamera teilen.
+      Der Preis ist etwas Bildhöhe — wie viel, steht unter der Bühne.</p>
+    <p>Wie viele Ausschnitte möglich sind, hängt von Bildbreite, Bildhöhe und Postformat ab.
+      Beispiel 6000 × 4000 bei 4:5: zwei oder drei. Bei drei bleiben 63 % der Bildhöhe stehen.</p>
+    <p><strong>Geht der Pano-Split nicht</strong>, sagt die Oberfläche im Klartext, warum:</p>
+    <ul>
+      <li>Das Foto ist nicht breiter als hoch.</li>
+      <li>Das Postformat ist 9:16 — eine Story ist ein Einzelbild.</li>
+      <li>Das Foto ist so breit, dass es mehr als zehn Ausschnitte bräuchte.</li>
+      <li>Es bliebe weniger als die halbe Bildhöhe übrig.</li>
+    </ul>
+
+    <div class="kasten warnung">
+      <p><strong>Zehn Bilder sind das Maximum.</strong> Über Metricool nimmt Instagram nur
+        2 bis 10 Bilder je Carousel. Die Zeile unter der Bühne zählt mit; wird es mehr, färbt
+        sie sich und der Export ist gesperrt, bis du Ausschnitte reduzierst oder ein Foto
+        entfernst. (In der Instagram-App selbst wären inzwischen 20 möglich — über die
+        Schnittstelle, die Planer benutzen, nicht.)</p>
+    </div>
+
+    <h2 id="text">2 · Text &amp; Hashtags</h2>
+
+    <h3>Standort</h3>
+    <p>Auswahl aus deiner eigenen Stammorte-Liste, sortiert nach Entfernung zum GPS-Punkt des
+      Fotos. Jeder Ort trägt eine Region, die die Hashtag-Auswahl vorbelegt.</p>
+    <p><strong>Einschränkung:</strong> Metricool kann einen Instagram-Standort nur mitschicken,
+      wenn automatisch veröffentlicht wird. Bei manueller Freigabe wählst du den Ort beim Posten
+      in Instagram selbst.</p>
+
+    <h3>Caption</h3>
+    <p>Instagram zeigt im Feed nur die <strong>ersten rund 125 Zeichen</strong>, danach kommt
+      „… mehr". Die Hashtags zählen mit. Der Haken muss also in den ersten Satz. Die Vorschau
+      rechts zeigt dir genau, wo abgeschnitten wird und wie viele Zeichen verdeckt bleiben.</p>
+
+    <h3>Hashtags</h3>
+    <table>
+      <tr><th>Knopf / Feld</th><th>Wirkung</th></tr>
+      <tr><td><strong>Lokaler Bezug</strong></td>
+        <td>Schaltet die regionalen Tags zu. Siegerland und Sauerland werden nie gemischt.</td></tr>
+      <tr><td><strong>Genre-Chips</strong></td><td>Passend zum Motiv anklicken.</td></tr>
+      <tr><td><strong>Vorschlag ergänzen</strong></td>
+        <td>Erzeugt aus deiner Bank einen Vorschlag und <strong>hängt ihn an die Liste an</strong>.
+          Bereits gewählte Hashtags bleiben erhalten, Dopplungen werden übersprungen — auch bei
+          abweichender Groß- und Kleinschreibung.</td></tr>
+      <tr><td><strong>Eingabefeld unten</strong></td>
+        <td>Einen eigenen Tag eintippen und <span class="taste">Enter</span>. Oder einen ganzen
+          Block aus dem Chat <strong>einfügen</strong> — er wird automatisch in einzelne Tags
+          zerlegt, mit oder ohne Leerzeichen dazwischen. Enter ist dabei nicht nötig.</td></tr>
+      <tr><td><strong>Leeren</strong></td><td>Liste zurücksetzen. Danach „Vorschlag ergänzen" ersetzt faktisch.</td></tr>
+      <tr><td><strong>Kopieren</strong></td><td>Alle gewählten Tags als Textblock in die Zwischenablage.</td></tr>
+    </table>
+    <p>Jeder Chip ist einzeln anklickbar — an und ab.</p>
+    <h3>Die Zählung</h3>
+    <p>Der Zähler oben rechts in der Hashtag-Karte zeigt drei Zustände:</p>
+    <table>
+      <tr><th>Anzahl</th><th>Anzeige</th><th>Bedeutung</th></tr>
+      <tr><td>bis 11</td><td>grau</td><td>Noch unter deiner Zielgröße.</td></tr>
+      <tr><td>12 bis 18</td><td>grün</td><td>Im Zielbereich.</td></tr>
+      <tr><td>19 bis 29</td><td>gelb, mit Warnzeile</td>
+        <td>Erlaubt, aber über deiner Zielgröße. Relevanz schlägt Menge.</td></tr>
+      <tr><td>30</td><td>rot, mit Warnzeile</td>
+        <td><strong>Instagrams Obergrenze.</strong> Weitere Hashtags werden nicht mehr
+          übernommen — weder beim Eintippen noch beim Einfügen noch über „Vorschlag ergänzen".
+          Die Einblendung sagt dann, wie viele abgewiesen wurden.</td></tr>
+    </table>
+    <p>Die 30 zählen über Caption <em>und</em> Kommentare zusammen. Wenn du einen Teil der
+      Tags später als ersten Kommentar nachschiebst, zählt das also mit.</p>
+
+    <h2 id="vorschau">Die Handy-Vorschau</h2>
+    <p>Rechts siehst du den Post so, wie er im Feed erscheint: Kopfzeile, Bild über die volle
+      Breite, Aktionsleiste mit den Carousel-Punkten darunter, Caption mit vorangestelltem
+      Kontonamen und Abbruch nach rund 125 Zeichen.</p>
+    <p>Durch das Carousel <strong>wischst du mit der Maus</strong>, stufenlos; beim Loslassen
+      rastet es auf das nächste Bild ein. Die Pfeiltasten gehen auch.</p>
+    <div class="kasten">
+      <p><strong>Worauf Verlass ist:</strong> Das gezeigte Bild ist die exportierte Datei, nicht
+        ein im Browser nachgebauter Zuschnitt. Seitenverhältnis und Bildausschnitt stimmen exakt.</p>
+      <p><strong>Worauf nicht:</strong> Die 125 Zeichen sind ein Richtwert — je nach Gerät und
+        Zeilenumbruch kann Instagram etwas früher abschneiden.</p>
+    </div>
+    <p>Im Story-Format fällt die Feed-Hülle weg und zwei schraffierte Bänder zeigen, was
+      Instagram überdeckt: oben rund 14 % mit der Profilzeile, unten rund 20 % mit Caption,
+      Antwortfeld und Musikleiste. Dort nichts Wichtiges platzieren.</p>
+
+    <h2 id="export">Export: die beiden Knöpfe oben rechts</h2>
+    <table>
+      <tr><th>Knopf</th><th>Was er tut</th><th>Wann</th></tr>
+      <tr>
+        <td><strong>Bilder herunterladen (ZIP)</strong></td>
+        <td>Rechnet alle Bilder des Posts und schickt sie als ZIP in den
+          <strong>Download-Ordner deines PCs</strong>. Darin <code>01.jpg</code>,
+          <code>02.jpg</code> … in Carousel-Reihenfolge, dazu <code>post.txt</code>
+          mit Caption, Hashtags, Ort und Format.</td>
+        <td><strong>Der Normalfall.</strong> Entpacken und in Metricool hochladen.</td>
+      </tr>
+      <tr>
+        <td><strong>Im Datenordner ablegen</strong></td>
+        <td>Schreibt dieselben Bilder zusätzlich in einen Ordner <em>auf der NAS</em>:
+          <code>data/export/&lt;Datum&gt;_&lt;Uhrzeit&gt;_carousel/</code>. Auf deinem PC ist das
+          <code>P:\postpilot\data\export\…</code>. Es kommt nichts in den Download-Ordner.</td>
+        <td>Wenn die Dateien auf der NAS liegen sollen — etwa als Zwischenstand, zum Ansehen in
+          der File Station, oder damit ich sie im Chat lesen kann.</td>
+      </tr>
+    </table>
+    <p>Beide Wege rechnen über denselben Code und erzeugen identische Bilder. Alle Bilder eines
+      Posts sind exakt gleich groß (1080 px breit), damit Instagram nichts nachformatiert.</p>
+    <div class="kasten">
+      <p>Die Rückmeldung erscheint unten rechts als Einblendung und nennt bei „Im Datenordner
+        ablegen" den vollständigen Pfad.</p>
+    </div>
+
+    <h3>Der Begleitzettel <code>post.txt</code></h3>
+    <p>Beide Wege legen neben die Bilder eine Textdatei. Sie enthält, in dieser Reihenfolge:
+      Datum, Format und Seitenverhältnis, die Anzahl der Bilder mit dem Hinweis, in welcher
+      Reihenfolge sie zu posten sind, den Ort, die Caption, die Hashtags mit ihrer Anzahl und
+      zum Schluss <strong>Caption und Hashtags als ein Block zum Kopieren</strong>. Damit lässt
+      sich der Post in Metricool zusammensetzen, ohne zwischen Chat, Browser und Zwischenablage
+      hin und her zu springen.</p>
+
+    <h2 id="entwurf">Der Arbeitsstand bleibt erhalten</h2>
+    <p>Format, Spielart und Ausschnitt je Foto, Caption, Hashtags, Ort und die Schalter im
+      Hashtag-Bereich werden <strong>automatisch gesichert</strong> — sekündlich, sobald sich
+      etwas geändert hat, und zusätzlich beim Verlassen der Seite. Gespeichert wird auf der NAS
+      in <code>data/entwurf.json</code>, auf deinem PC also
+      <code>P:\postpilot\data\entwurf.json</code>.</p>
+    <p>Damit übersteht der Post ohne Zutun:</p>
+    <ul>
+      <li><span class="taste">F5</span> und <span class="taste">Strg</span>+<span class="taste">F5</span>,</li>
+      <li>den Wechsel zu dieser Anleitung und zurück,</li>
+      <li>das Schließen des Browsers und das Weiterarbeiten an einem anderen Rechner,</li>
+      <li>einen Neustart des Containers.</li>
+    </ul>
+    <p>Weggeworfen wird der Entwurf nur absichtlich: durch <strong>Neuer Post</strong> und durch
+      <strong>Archivieren</strong>. Beides leert den Arbeitsbereich vollständig.</p>
+    <div class="kasten">
+      <p>Vorher war das anders, und das war ein Fehler: Die Einstellungen lebten nur im Browser.
+        Ein Neuladen setzte sie unbemerkt zurück, und der Export lieferte danach mittige
+        Standardzuschnitte statt der eingestellten Ausschnitte — es sah aus wie ein Fehler im
+        Zuschneiden, war aber ein verlorener Arbeitsstand.</p>
+    </div>
+
+    <h2 id="archiv">3 · Archiv</h2>
+    <p>Nach dem Veröffentlichen den Post hier abschließen. Namen eintragen, entscheiden, ob die
+      Originalfotos mitsollen, und auf <strong>Archivieren</strong>.</p>
+    <p>Angelegt wird <code>data/archiv/&lt;Datum&gt;_&lt;Name&gt;/</code> mit den fertigen
+      Bildern, einer <code>post.json</code>, in der Caption, Hashtags, Ort, Format und die
+      Spielart je Bild stehen, und demselben <code>post.txt</code> wie im Export — zum
+      Nachlesen und Kopieren, ohne in der JSON-Datei zu suchen. Danach ist der Arbeitsbereich
+      leer und der nächste Post kann beginnen.</p>
+    <p>In der Liste darunter steht jeder abgeschlossene Post mit Bildstreifen, Caption und
+      Größe. Zwei getrennte Knöpfe:</p>
+    <ul>
+      <li><strong>Originale löschen</strong> — nur die großen Kameradateien verschwinden.
+        Fertige Bilder, Caption und Hashtags bleiben. Der Fall „Platz schaffen,
+        Erinnerung behalten".</li>
+      <li><strong>Post löschen</strong> — der ganze Ordner verschwindet.</li>
+    </ul>
+    <p>Beide fragen vorher nach. Daneben gibt es weiterhin <strong>Neuer Post</strong> in der
+      Kopfzeile: alles verwerfen, ohne zu archivieren.</p>
+
+    <h2 id="chat">Zusammenspiel mit dem Chat</h2>
+    <p>Ist der Datenordner <code>P:\postpilot\data</code> in der Claude-Desktop-App als Ordner
+      verbunden, kann der Skill <code>vothography-post</code> direkt hineinschauen: die
+      exportierten Bilder ansehen, die Reihenfolge lesen und im Archiv nachsehen, was zuletzt
+      getextet und getaggt wurde. Du musst dann keine Fotos mehr in den Chat ziehen.</p>
+    <p>Die fertige Caption und den Hashtag-Block aus dem Chat fügst du hier wieder ein — der
+      Block darf in einem Rutsch in das Hashtag-Feld.</p>
+
+    <h2 id="klemmt">Wenn etwas klemmt</h2>
+    <table>
+      <tr><th>Symptom</th><th>Ursache und Abhilfe</th></tr>
+      <tr><td>Änderungen sind nach einem Update nicht da</td>
+        <td><strong>Erst die Startzeit oben rechts prüfen.</strong> Steht dort eine alte Uhrzeit,
+          läuft noch die alte JAR — Container neu starten. Stimmt die Zeit, aber die Oberfläche
+          ist alt: <span class="taste">Strg</span>+<span class="taste">F5</span>.</td></tr>
+      <tr><td>Export-Knöpfe sind grau</td>
+        <td>Entweder ist kein Foto geladen, oder das Carousel hat mehr als zehn Bilder.</td></tr>
+      <tr><td>Pano-Split nicht wählbar</td>
+        <td>Der Hinweis über der Bühne nennt den Grund. Oft hilft ein anderes Postformat.</td></tr>
+      <tr><td>Im ZIP stecken mittige Standardzuschnitte statt meiner Ausschnitte</td>
+        <td>Das war der Fehler vor dem Entwurfsspeicher. Prüfe die Startzeit oben rechts: Läuft
+          noch die alte JAR, fehlt die Sicherung. Mit der neuen Fassung stehen die Einstellungen
+          in <code>data/entwurf.json</code> und werden beim Laden wieder angewandt.</td></tr>
+      <tr><td>Fehlermeldung beim Export</td>
+        <td>Sie erscheint unten rechts im Klartext. Bleibt sie unverständlich, im Chat nachfragen.</td></tr>
+    </table>
+
+    <h2 id="zahlen">Instagram-Zahlen, die hier eingebaut sind</h2>
+    <table>
+      <tr><th>Thema</th><th>Wert</th></tr>
+      <tr><td>Feed-Formate</td><td>4:5 = 1080 × 1350 · 1:1 = 1080 × 1080 · 1,91:1 = 1080 × 566</td></tr>
+      <tr><td>Hochformat-Grenze</td><td>In der App inzwischen 3:4 — über die Schnittstelle, die
+        Planer nutzen, bleibt es bei 4:5</td></tr>
+      <tr><td>Carousel</td><td>In der App bis 20 Bilder, über die Schnittstelle 2 bis 10</td></tr>
+      <tr><td>Carousel-Format</td><td>Alle Bilder bekommen das Verhältnis des ersten</td></tr>
+      <tr><td>Caption</td><td>2.200 Zeichen gesamt, sichtbar rund 125</td></tr>
+      <tr><td>Hashtags</td><td>Höchstens 30 je Beitrag (Caption und Kommentare zusammen); hier ist 12–18 das Ziel, PostPilot sperrt bei 30</td></tr>
+      <tr><td>Story-Safe-Zones</td><td>Oben rund 14 %, unten rund 20 %</td></tr>
+      <tr><td>Ausgabegröße</td><td>Immer 1080 px breit, Höhe nach Format</td></tr>
+    </table>
+    <p class="kasten">Stand der Recherche: 11. Oktober 2026. Instagram ändert solche Vorgaben
+      gelegentlich — im Zweifel im Chat kurz nachprüfen lassen.</p>
+  </main>
+</div>
+
+</body>
+</html>

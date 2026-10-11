@@ -1,0 +1,407 @@
+:root {
+  --bg: #15171F;
+  --panel: #1B1D26;
+  --panel-2: #22242E;
+  --panel-3: #2A2C36;
+  --border: #33363F;
+  --border-soft: #2A2C36;
+  --text: #F2F3F7;
+  --text-dim: #A9ADBA;
+  --text-faint: #6E7280;
+  --accent: #E2A54A;
+  --accent-ink: #241A06;
+  --teal: #4FC3D9;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+}
+
+button { font: inherit; cursor: pointer; }
+.hidden { display: none !important; }
+.faint { color: var(--text-faint); font-size: 11.5px; }
+.hint { color: var(--text-faint); font-size: 11.5px; line-height: 1.5; margin: 4px 0 0; }
+
+/* ---------- Kopfzeile ---------- */
+.header {
+  display: flex; align-items: center; gap: 28px;
+  height: 64px; padding: 0 24px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.wordmark { font-size: 16px; font-weight: 700; line-height: 1.1; }
+.wordmark-sub { font-size: 10px; color: var(--text-faint); letter-spacing: 0.04em; }
+
+.steps { display: flex; gap: 6px; }
+.step {
+  background: none; border: 0; color: var(--text-dim);
+  font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 8px;
+}
+.step.is-active { background: var(--accent); color: var(--accent-ink); }
+
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+
+.primary {
+  background: var(--accent); color: var(--accent-ink);
+  border: 0; border-radius: 10px; padding: 10px 18px;
+  font-size: 13px; font-weight: 600;
+}
+.primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.ghost {
+  background: transparent; color: var(--text-dim);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 7px 14px; font-size: 12px;
+}
+/* Die Anleitung ist eine eigene Seite, deshalb ein Link statt eines Knopfes. */
+.hilfe-knopf { text-decoration: none; display: inline-block; line-height: 1.35; }
+.hilfe-knopf:hover { border-color: var(--accent); color: var(--text); }
+
+/* ---------- Grundgerüst ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr) 460px;
+  height: calc(100vh - 64px);
+}
+
+.rail {
+  border-right: 1px solid var(--border-soft);
+  padding: 18px 16px; display: flex; flex-direction: column;
+  align-items: center; gap: 14px; overflow-y: auto;
+}
+.upload-tile {
+  width: 72px; height: 72px; flex-shrink: 0;
+  border: 1.5px dashed var(--border); border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; color: var(--text-faint); font-size: 9.5px; cursor: pointer;
+}
+.thumbs { display: flex; flex-direction: column; gap: 14px; }
+.thumb-wrap { position: relative; width: 72px; }
+.thumb-wrap img {
+  width: 72px; height: 72px; object-fit: cover;
+  border-radius: 14px; border: 2px solid transparent; cursor: pointer; display: block;
+}
+.thumb-wrap img.is-active { border-color: var(--accent); }
+.thumb-nr {
+  position: absolute; top: 3px; left: 3px; z-index: 1;
+  background: rgba(10, 12, 18, 0.78); color: #fff;
+  font-size: 10px; font-weight: 600; border-radius: 5px; padding: 1px 5px;
+}
+.thumb-marke {
+  position: absolute; bottom: 3px; left: 3px; right: 3px; z-index: 1;
+  background: rgba(226, 165, 74, 0.92); color: var(--accent-ink);
+  font-size: 9px; font-weight: 700; letter-spacing: 0.02em;
+  border-radius: 5px; padding: 1px 4px; text-align: center;
+}
+.thumb-pfeile {
+  position: absolute; right: 2px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 2px; opacity: 0; transition: opacity .12s;
+}
+.thumb-wrap:hover .thumb-pfeile { opacity: 1; }
+.thumb-pfeile button {
+  width: 18px; height: 18px; padding: 0; line-height: 1;
+  font-size: 9px; color: #fff; background: rgba(10, 12, 18, 0.8);
+  border: 1px solid var(--border); border-radius: 4px;
+}
+.thumb-pfeile button:disabled { opacity: 0.3; cursor: default; }
+
+.thumb-weg {
+  position: absolute; top: 3px; right: 3px; z-index: 2;
+  width: 18px; height: 18px; padding: 0; line-height: 1;
+  font-size: 12px; color: #fff; background: rgba(10, 12, 18, 0.8);
+  border: 1px solid var(--border); border-radius: 4px;
+  opacity: 0; transition: opacity .12s;
+}
+.thumb-wrap:hover .thumb-weg { opacity: 1; }
+.thumb-weg:hover { background: #8C3B3B; border-color: #8C3B3B; }
+
+/* Kopie anlegen — liegt links neben dem Entfernen-Kreuz. */
+.thumb-kopie {
+  position: absolute; top: 3px; right: 24px; z-index: 2;
+  width: 18px; height: 18px; padding: 0; line-height: 1;
+  font-size: 11px; color: #fff; background: rgba(10, 12, 18, 0.8);
+  border: 1px solid var(--border); border-radius: 4px;
+  opacity: 0; transition: opacity .12s;
+}
+.thumb-wrap:hover .thumb-kopie { opacity: 1; }
+.thumb-kopie:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+/* Rückmeldung zum Export — bewusst über allem, nicht in einer Spalte, die wegklappen kann. */
+.toast {
+  position: fixed; right: 20px; bottom: 20px; z-index: 50;
+  max-width: 520px; display: flex; align-items: flex-start; gap: 12px;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 12.5px; line-height: 1.5; color: var(--text);
+  box-shadow: 0 18px 44px -18px rgba(0, 0, 0, 0.8);
+}
+.toast.ist-fehler { border-left-color: #C25B5B; }
+.toast-zu {
+  background: none; border: 0; color: var(--text-faint);
+  font-size: 16px; line-height: 1; padding: 0 2px;
+}
+
+.panel { padding: 24px 28px; overflow-y: auto; }
+.panel-head h1 { font-size: 19px; margin: 0 0 2px; }
+.panel-head p { color: var(--text-dim); font-size: 13px; margin: 0 0 16px; }
+
+.format-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.format {
+  background: transparent; color: var(--text-dim);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 9px 16px; font-size: 13px; font-weight: 600;
+}
+.format.is-active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+.notice {
+  background: rgba(79, 195, 217, 0.12);
+  border: 1px solid rgba(79, 195, 217, 0.35);
+  border-radius: 10px; padding: 10px 14px; margin: 0 0 16px;
+  font-size: 12.5px; color: var(--text-dim); line-height: 1.5;
+}
+
+/* ---------- Zuschnitt-Bühne ---------- */
+.stage {
+  position: relative; width: 100%; max-width: 640px; aspect-ratio: 3 / 2;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.stage img {
+  max-width: 100%; max-height: 100%; display: block;
+  user-select: none; -webkit-user-drag: none;
+}
+.stage.is-draggable { cursor: grab; }
+.stage.is-dragging { cursor: grabbing; }
+.overlay { position: absolute; inset: 0; pointer-events: none; }
+.stage-empty { color: var(--text-faint); font-size: 12.5px; position: absolute; }
+
+.mask { position: absolute; background: rgba(8, 10, 16, 0.62); }
+.grid-line { position: absolute; background: rgba(255, 255, 255, 0.32); }
+.corner { position: absolute; width: 14px; height: 14px; border: 0 solid var(--accent); }
+.divider { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); }
+.slice-chip {
+  position: absolute; top: 8px;
+  background: rgba(10, 12, 18, 0.72); color: #fff;
+  font-size: 11px; font-weight: 600; border-radius: 6px; padding: 3px 9px;
+}
+
+/* Zeile unter der Bühne: Einzelbild oder Pano-Split für das gewählte Foto. */
+.modus-zeile {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 14px;
+}
+.segment {
+  display: flex; border: 1px solid var(--border); border-radius: 9px; overflow: hidden;
+}
+.segment-knopf {
+  background: var(--panel-2); color: var(--text-dim); border: 0;
+  padding: 8px 15px; font-size: 12.5px; font-weight: 600;
+}
+.segment-knopf + .segment-knopf { border-left: 1px solid var(--border); }
+.segment-knopf.is-active { background: var(--accent); color: var(--accent-ink); }
+.segment-knopf:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.pano-controls { display: flex; align-items: center; gap: 10px; }
+.feld-schmal { width: auto; padding: 7px 10px; font-size: 12.5px; }
+.hint.warnung { color: var(--accent); }
+
+/* Zustände des Hashtag-Zählers: im Ziel, darüber, an Instagrams Obergrenze. */
+.zahl-gut { color: #7FBF6A; }
+.zahl-zuviel { color: var(--accent); }
+.zahl-grenze { color: #E29A9A; }
+.stepper {
+  display: flex; align-items: center;
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.stepper button {
+  width: 30px; height: 30px; background: var(--panel-2);
+  border: 0; color: var(--text); font-size: 15px;
+}
+.stepper span { width: 34px; text-align: center; font-weight: 600; }
+
+/* ---------- Text & Hashtags ---------- */
+.two-columns { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; align-items: start; }
+.column { display: flex; flex-direction: column; gap: 14px; }
+.card {
+  background: var(--panel); border: 1px solid var(--border-soft);
+  border-radius: 14px; padding: 16px;
+}
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.card-label { font-size: 11px; letter-spacing: 0.05em; color: var(--text-faint); font-weight: 600; }
+
+.field {
+  width: 100%; background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 9px;
+  padding: 10px 12px; font: inherit; font-size: 13px;
+}
+.field::placeholder { color: var(--text-faint); }
+textarea.field { resize: vertical; line-height: 1.5; }
+
+.list-header { font-size: 10px; letter-spacing: 0.04em; color: var(--text-faint); margin: 12px 0 7px; }
+.ort-liste { display: flex; flex-direction: column; gap: 5px; max-height: 260px; overflow-y: auto; }
+.ort-zeile {
+  display: flex; gap: 9px; align-items: flex-start;
+  border: 1.5px solid var(--border-soft); border-radius: 10px;
+  padding: 9px 11px; cursor: pointer;
+}
+.ort-zeile.is-active { border-color: var(--accent); background: var(--panel-2); }
+.ort-name { font-size: 12.5px; font-weight: 600; }
+.ort-meta { font-size: 10.5px; color: var(--text-faint); margin-top: 1px; }
+.row { display: flex; gap: 8px; margin-top: 10px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.feld-zeile { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.feld-label { font-size: 11px; color: var(--text-faint); }
+.feld-zeile .field { flex: 1; }
+select.field { appearance: none; }
+.schalter-zeile {
+  display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px;
+  font-size: 12px; color: var(--text-dim);
+}
+.schalter-zeile label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.chip.is-active { border-color: var(--accent); color: var(--text); background: var(--panel-3); }
+.chip.is-tag { cursor: pointer; }
+.block-titel {
+  font-size: 10px; letter-spacing: 0.04em; color: var(--text-faint);
+  margin: 12px 0 2px; text-transform: uppercase;
+}
+.chip {
+  background: var(--panel-2); border: 1px solid var(--border-soft);
+  border-radius: 999px; padding: 5px 11px; font-size: 11.5px; color: var(--text-dim);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); color: var(--text); }
+
+/* ---------- Archiv ---------- */
+.archiv-liste { display: flex; flex-direction: column; gap: 10px; max-width: 760px; }
+.archiv-post {
+  background: var(--panel); border: 1px solid var(--border-soft);
+  border-radius: 12px; padding: 12px 14px;
+}
+.archiv-kopf { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.archiv-name { font-size: 13.5px; font-weight: 600; }
+.archiv-meta { font-size: 11px; color: var(--text-faint); }
+.archiv-bilder { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+.archiv-bilder img {
+  width: 52px; height: 65px; object-fit: cover;
+  border-radius: 6px; border: 1px solid var(--border-soft);
+}
+.archiv-caption {
+  font-size: 12px; color: var(--text-dim); line-height: 1.45;
+  margin: 2px 0 8px; max-width: 60ch;
+}
+.archiv-tags { font-size: 11px; color: var(--text-faint); margin-bottom: 8px; }
+.archiv-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; }
+.gefahr { border-color: #8C3B3B; color: #E29A9A; }
+.gefahr:hover { background: #8C3B3B; color: #fff; }
+
+/* ---------- Vorschau ---------- */
+/* Maße und Aufbau folgen der Instagram-App: Kopfzeile, Bild über die volle Breite,
+   Aktionsleiste mit mittigen Carousel-Punkten, dann Caption mit vorangestelltem Namen. */
+.preview {
+  border-left: 1px solid var(--border-soft);
+  padding: 20px 22px 32px; overflow-y: auto;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.preview .card-head { width: 100%; }
+
+.phone {
+  width: 100%; max-width: 400px;
+  background: #0D0F15; border: 1px solid #2F323C;
+  border-radius: 34px; padding: 10px;
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+}
+.screen { background: #000; border-radius: 26px; overflow: hidden; color: #fff; }
+
+.post-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+/* Story: keine Feed-Hülle. Was Instagram dort überlagert, zeigen die Bänder im Bild. */
+.screen.ist-story .post-head,
+.screen.ist-story .post-aktionen,
+.screen.ist-story .post-body { display: none; }
+.post-head-text { min-width: 0; }
+.avatar {
+  width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink);
+  font-weight: 700; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.username { font-size: 13px; font-weight: 600; line-height: 1.25; }
+.location {
+  font-size: 11px; color: #C7CBD4; line-height: 1.25;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.post-mehr { margin-left: auto; color: #fff; font-size: 17px; line-height: 1; letter-spacing: 1px; }
+
+.post-image { position: relative; background: #000; min-height: 120px; overflow: hidden; }
+.post-image.kann-wischen { cursor: grab; touch-action: pan-y; }
+.post-image.wischt { cursor: grabbing; }
+
+/* Die Spur trägt alle Bilder des Carousels nebeneinander. */
+.spur { display: flex; height: 100%; will-change: transform; }
+.spur.sanft { transition: transform .26s cubic-bezier(.22,.61,.36,1); }
+.spur-bild {
+  width: 100%; height: 100%; flex: 0 0 100%;
+  object-fit: cover; display: block; user-select: none; -webkit-user-drag: none;
+}
+/* Der Zähler oben rechts, den Instagram bei Carousels einblendet. */
+.zaehler {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(0, 0, 0, 0.6); color: #fff;
+  font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 9px;
+}
+.swipe {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 40px; padding: 0;
+  background: rgba(10, 12, 18, 0.5); color: #fff;
+  border: 0; border-radius: 5px; font-size: 18px; line-height: 1;
+}
+.swipe-zurueck { left: 5px; }
+.swipe-vor { right: 5px; }
+
+/* Story: oben 14 %, unten 20 % verdeckt die Instagram-Oberfläche. */
+.safe-area {
+  position: absolute; left: 0; right: 0;
+  background: repeating-linear-gradient(45deg,
+    rgba(226, 165, 74, 0.16) 0 6px, rgba(226, 165, 74, 0.05) 6px 12px);
+  border-color: rgba(226, 165, 74, 0.4); border-style: dashed; border-width: 0;
+  pointer-events: none;
+}
+.safe-oben { top: 0; height: 14%; border-bottom-width: 1px; }
+.safe-unten { bottom: 0; height: 20%; border-top-width: 1px; }
+
+.post-aktionen {
+  position: relative; display: flex; align-items: center;
+  padding: 9px 12px 4px; min-height: 34px;
+}
+.aktion-gruppe { display: flex; align-items: center; gap: 14px; }
+.aktion-gruppe:last-child { margin-left: auto; }
+.aktion-gruppe svg { width: 22px; height: 22px; color: #fff; display: block; }
+
+.dots {
+  position: absolute; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 4px; pointer-events: none;
+}
+.dots span {
+  height: 6px; width: 6px; border-radius: 3px;
+  background: rgba(255, 255, 255, 0.35); cursor: pointer; pointer-events: auto;
+}
+.dots span.is-active { background: #3C93F3; }
+
+.post-body { padding: 2px 12px 12px; }
+.caption { font-size: 13px; line-height: 1.4; word-break: break-word; }
+.caption-name { font-weight: 600; margin-right: 5px; }
+.caption-mehr { color: #9AA0AD; }
+.tags { font-size: 12px; color: #9AA0AD; margin-top: 5px; }
+.post-zeit { font-size: 10.5px; color: #7D828D; margin-top: 7px; text-transform: uppercase; }
+
+@media (max-width: 1320px) {
+  .layout { grid-template-columns: 88px minmax(0, 1fr); }
+  .preview { display: none; }
+}

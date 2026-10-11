@@ -1,0 +1,41 @@
+services:
+  postpilot:
+    build: .
+    image: postpilot:latest
+    container_name: postpilot
+
+    ports:
+      # links der Port auf der NAS, rechts der im Container.
+      # Ist 8080 auf der NAS schon belegt, hier auf z. B. 8095:8080 ändern.
+      - "8080:8080"
+
+    volumes:
+      # links ein echter Ordner auf der NAS, rechts der Ordner im Container.
+      # Alles, was die App speichert, liegt damit sichtbar im Dateimanager.
+      - ./data:/data
+
+    environment:
+      - POSTPILOT_DATA_DIR=/data
+      - TZ=Europe/Berlin
+
+    # Nur nötig, wenn im Log "Permission denied" für /data steht: Der Container läuft unter
+    # einer eigenen Benutzernummer, die auf der NAS nichts schreiben darf. Dann hier die
+    # Nummer des eigenen DSM-Benutzers eintragen (auf der NAS ablesen mit: id <benutzername>)
+    # und die Zeile entkommentieren.
+    # user: "1026:100"
+
+    # Startet nach Neustart der NAS oder einem Stromausfall von selbst wieder.
+    restart: unless-stopped
+
+    # Ein bisschen Luft nach oben: große Fotos brauchen beim Skalieren Speicher.
+    mem_limit: 1g
+
+    healthcheck:
+      # Prüft nur, ob der Server den Port annimmt — bewusst ohne curl, das im
+      # Java-Grundimage nicht garantiert enthalten ist und die Prüfung sonst
+      # dauerhaft auf "unhealthy" stehen ließe.
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 40s

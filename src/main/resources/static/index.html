@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PostPilot — Insta-Posting-Studio</title>
+  <!-- Als Daten-URL eingebettet: so bleibt die Seite ohne Internet vollständig. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2315171F'/%3E%3Cpath d='M3 18 L9 9 L13 14 L16 10 L21 18 Z' fill='%23E2A54A'/%3E%3Ccircle cx='17' cy='6.5' r='2.4' fill='%23E2A54A'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 18 L9 9 L13 14 L16 10 L21 18 Z" fill="#E2A54A" opacity="0.9"/>
+      <circle cx="17" cy="6.5" r="2.4" fill="#E2A54A"/>
+    </svg>
+    <div>
+      <div class="wordmark">PostPilot</div>
+      <div class="wordmark-sub">INSTA-POSTING-STUDIO</div>
+    </div>
+  </div>
+
+  <nav class="steps">
+    <button class="step is-active" data-tab="crop">1 · Zuschnitt</button>
+    <button class="step" data-tab="text">2 · Text &amp; Hashtags</button>
+    <button class="step" data-tab="archiv">3 · Archiv</button>
+  </nav>
+
+  <div class="header-right">
+    <span id="datenpfad" class="faint"></span>
+    <a class="ghost hilfe-knopf" href="hilfe.html" target="_blank" rel="noopener"
+       title="Anleitung in einem neuen Tab öffnen">? Anleitung</a>
+    <button id="neuer-post" class="ghost" type="button">Neuer Post</button>
+    <button id="ablegen-button" class="ghost" type="button" disabled>Im Datenordner ablegen</button>
+    <button id="export-button" class="primary" disabled>Bilder herunterladen (ZIP)</button>
+  </div>
+</header>
+
+<!-- Steht über allem, damit die Rückmeldung auch bei schmalem Fenster und auf dem
+     Hashtag-Reiter sichtbar ist. Vorher stand sie nur in der Vorschau-Spalte. -->
+<div id="meldung" class="toast hidden">
+  <span id="meldung-text"></span>
+  <button id="meldung-zu" class="toast-zu" type="button" aria-label="Schließen">×</button>
+</div>
+
+<main class="layout">
+
+  <aside class="rail">
+    <label class="upload-tile">
+      <input id="upload-input" type="file" accept="image/jpeg,image/png" multiple hidden>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      <span>Hochladen</span>
+    </label>
+    <div id="thumbs" class="thumbs"></div>
+  </aside>
+
+  <section id="panel-crop" class="panel">
+    <div class="panel-head">
+      <h1>Zuschnitt</h1>
+      <p>Das Format gilt für den ganzen Post. Jedes Foto geht einzeln ins Carousel — oder
+        als Pano-Split in mehrere nahtlose Ausschnitte.</p>
+    </div>
+
+    <div class="feld-label">Format des Posts</div>
+    <div class="format-row" id="format-row">
+      <button class="format is-active" data-format="FEED_4_5">4:5 Feed</button>
+      <button class="format" data-format="SQUARE_1_1">1:1</button>
+      <button class="format" data-format="STORY_9_16">9:16 Story</button>
+    </div>
+
+    <div id="pano-hinweis" class="notice hidden"></div>
+
+    <div class="stage" id="stage">
+      <img id="stage-image" alt="" draggable="false">
+      <div id="stage-overlay" class="overlay"></div>
+      <p id="stage-leer" class="stage-empty">Noch kein Foto geladen — links auf „Hochladen" klicken.</p>
+    </div>
+
+    <div id="modus-zeile" class="modus-zeile hidden">
+      <span class="faint">Dieses Foto</span>
+      <div class="segment">
+        <button id="modus-ausschnitt" class="segment-knopf is-active" type="button">Ausschnitt</button>
+        <button id="modus-ganz" class="segment-knopf" type="button">Ganzes Foto</button>
+        <button id="modus-pano" class="segment-knopf" type="button">Pano-Split</button>
+      </div>
+
+      <div id="fuellung-wahl" class="pano-controls hidden">
+        <label class="faint" for="fuellung">Freiraum</label>
+        <select id="fuellung" class="field feld-schmal">
+          <option value="schwarz">Schwarz</option>
+          <option value="weich">Unscharf aus dem Foto</option>
+          <option value="weiss">Weiß</option>
+        </select>
+      </div>
+
+      <div id="pano-controls" class="pano-controls hidden">
+        <span class="faint">Ausschnitte</span>
+        <div class="stepper">
+          <button id="pano-minus" type="button">−</button>
+          <span id="pano-anzahl">3</span>
+          <button id="pano-plus" type="button">+</button>
+        </div>
+        <span id="pano-grenzen" class="faint"></span>
+      </div>
+
+      <button id="crop-reset" class="ghost hidden" type="button">Ausschnitt zentrieren</button>
+    </div>
+
+    <p id="stage-info" class="faint"></p>
+    <p id="carousel-info" class="hint"></p>
+  </section>
+
+  <section id="panel-text" class="panel hidden">
+    <div class="panel-head">
+      <h1>Text &amp; Hashtags</h1>
+      <p>Caption, Hashtags und der Ort für diesen Post.</p>
+    </div>
+
+    <div class="two-columns">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-label">STANDORT</span>
+          <span class="faint">Meine Orte</span>
+        </div>
+        <input id="ort-suche" class="field" type="search" placeholder="Ort suchen …" autocomplete="off">
+        <div id="ort-liste-kopf" class="list-header">NÄCHSTE STAMMORTE · GPS AUS DEM FOTO</div>
+        <div id="ort-liste" class="ort-liste"></div>
+        <div class="row">
+          <button id="ort-keiner" class="ghost" type="button">Kein Standort</button>
+          <button id="ort-anlegen" class="ghost" type="button">Ort hinzufügen</button>
+        </div>
+        <p class="hint">Ein Ort lässt sich über Metricool nur bei automatischer Veröffentlichung
+          mitschicken — bei manueller Freigabe wählst du ihn beim Posten in Instagram.</p>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <div class="card-head"><span class="card-label">CAPTION</span></div>
+          <textarea id="caption" class="field" rows="6" placeholder="Caption auf Englisch …"></textarea>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <span class="card-label">HASHTAGS</span>
+            <span id="hashtag-zahl" class="faint">0 von 12–18</span>
+          </div>
+
+          <div class="feld-zeile">
+            <label class="feld-label" for="hashtag-region">Lokaler Bezug</label>
+            <select id="hashtag-region" class="field">
+              <option value="">kein lokaler Bezug</option>
+              <option value="siegerland">Siegerland / Südwestfalen</option>
+              <option value="sauerland">Sauerland</option>
+              <option value="nrw">NRW allgemein</option>
+            </select>
+          </div>
+
+          <div class="feld-label" style="margin-top:10px;">Genre passend zum Motiv</div>
+          <div id="genre-chips" class="chips"></div>
+
+          <div class="schalter-zeile">
+            <label><input type="checkbox" id="hashtag-presse"> Presse-Tags (starke Motive)</label>
+            <label><input type="checkbox" id="hashtag-reichweite" checked> Reichweiten-Tags</label>
+          </div>
+
+          <div class="row">
+            <button id="hashtag-vorschlag" class="primary" type="button"
+                    title="Ergänzt die Liste — bereits gewählte Hashtags bleiben erhalten">Vorschlag ergänzen</button>
+            <button id="hashtag-kopieren" class="ghost" type="button">Kopieren</button>
+            <button id="hashtag-leeren" class="ghost" type="button">Leeren</button>
+          </div>
+
+          <p id="hashtag-warnung" class="hint warnung hidden"></p>
+          <p id="hashtag-hinweis" class="hint"></p>
+
+          <div id="hashtag-bloecke"></div>
+
+          <div class="feld-label" style="margin-top:12px;">Ausgewählt</div>
+          <div id="hashtag-chips" class="chips"></div>
+
+          <input id="hashtag-eingabe" class="field" type="text" style="margin-top:10px;"
+                 placeholder="Eigenen Hashtag eintippen und Enter drücken">
+
+          <div id="account-bereich" class="hidden">
+            <div class="feld-label" style="margin-top:12px;">Accounts zum Markieren</div>
+            <div id="account-chips" class="chips"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-archiv" class="panel hidden">
+    <div class="panel-head">
+      <h1>Archiv</h1>
+      <p>Veröffentlichte Posts ablegen — und später wieder aufräumen.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-label">AKTUELLEN POST ABSCHLIESSEN</span></div>
+      <div class="feld-zeile">
+        <label class="feld-label" for="archiv-name">Name</label>
+        <input id="archiv-name" class="field" type="text" placeholder="z. B. Nebel im Talkessel">
+      </div>
+      <div class="schalter-zeile">
+        <label><input type="checkbox" id="archiv-originale"> Originalfotos mit archivieren</label>
+      </div>
+      <div class="row">
+        <button id="archiv-ablegen" class="primary" type="button">Archivieren</button>
+      </div>
+      <p id="archiv-hinweis" class="hint"></p>
+    </div>
+
+    <div class="feld-label" style="margin:18px 0 8px;">Abgeschlossene Posts</div>
+    <div id="archiv-liste" class="archiv-liste"></div>
+  </section>
+
+  <aside class="preview">
+    <div class="card-head">
+      <span class="card-label">INSTAGRAM-VORSCHAU</span>
+      <span id="preview-groesse" class="faint"></span>
+    </div>
+
+    <div class="phone">
+      <div id="screen" class="screen">
+        <div class="post-head">
+          <div class="avatar">V</div>
+          <div class="post-head-text">
+            <div class="username">vothography</div>
+            <div id="preview-ort" class="location"></div>
+          </div>
+          <span class="post-mehr" aria-hidden="true">⋯</span>
+        </div>
+
+        <!-- Alle Carousel-Bilder liegen nebeneinander auf einer Spur; gewischt wird die
+             Spur, nicht ein einzelnes Bild getauscht. Nur so geht es stufenlos. -->
+        <div id="post-image" class="post-image">
+          <div id="preview-spur" class="spur"></div>
+          <span id="preview-zaehler" class="zaehler hidden"></span>
+        </div>
+
+        <!-- Aktionsleiste wie in der App: Symbole links, Carousel-Punkte mittig,
+             Merken rechts. Die Punkte sitzen unter dem Bild, nicht darauf. -->
+        <div class="post-aktionen">
+          <div class="aktion-gruppe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                 d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                 d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-3.8-.9L3 20.5l1.6-4.9A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                 d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </div>
+          <div id="preview-dots" class="dots hidden"></div>
+          <div class="aktion-gruppe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path
+                 d="M19 21 12 16l-7 5V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1z"/></svg>
+          </div>
+        </div>
+
+        <div class="post-body">
+          <div id="preview-caption" class="caption">Noch keine Caption</div>
+          <div id="preview-tags" class="tags"></div>
+          <div class="post-zeit">Gerade eben</div>
+        </div>
+      </div>
+    </div>
+
+    <p id="preview-info" class="faint"></p>
+    <p id="preview-hinweis" class="hint"></p>
+  </aside>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

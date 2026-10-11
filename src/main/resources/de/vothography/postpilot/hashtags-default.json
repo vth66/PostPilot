@@ -1,0 +1,84 @@
+{
+  "gruppen" : [ {
+    "id" : "core",
+    "name" : "Core / Branding",
+    "typ" : "CORE",
+    "region" : null,
+    "tags" : [ "#vothography", "#landscapephotography", "#naturephotography", "#landschaftsfotografie", "#sonyalpha", "#sonyalpha7iii", "#landscapephotographer", "#naturfotografie" ]
+  }, {
+    "id" : "siegerland",
+    "name" : "Siegerland / Südwestfalen",
+    "typ" : "REGIONAL",
+    "region" : "siegerland",
+    "tags" : [ "#suedwestfalen_echt", "#siwiphotocommunity", "#meinsuedwestfalen", "#discoversiwi", "#siegerland", "#topbeheimatet", "#rausindenwesten", "#bilderpoolswf", "#ig_siegerland", "#siegerlandwittgenstein", "#freudenberg", "#szschnappschuss", "#ig_naturelovers", "#glücksmoment" ]
+  }, {
+    "id" : "nrw",
+    "name" : "NRW-weit",
+    "typ" : "REGIONAL",
+    "region" : "nrw",
+    "tags" : [ "#nrw", "#nrwinbildern", "#visitnrw", "#ig_nrw" ]
+  }, {
+    "id" : "sauerland",
+    "name" : "Sauerland",
+    "typ" : "REGIONAL",
+    "region" : "sauerland",
+    "tags" : [ "#sauerland", "#sauerland_impressionen", "#sauerlandliebe", "#rothaarsteig", "#rothaargebirge", "#kahlerasten", "#winterberg", "#ig_sauerland", "#sauerlandmachtglücklich" ]
+  }, {
+    "id" : "presse",
+    "name" : "Presse / Magazin (nur bei starken Motiven)",
+    "typ" : "PRESSE",
+    "region" : null,
+    "tags" : [ "#wiesnernews", "#chipfotovideo", "#geomagazin", "#topmagazinsiwi", "#siegenerzeitung", "#lokalzeitsüdwestfalen", "#wdrlokalzeit" ]
+  }, {
+    "id" : "nightscape",
+    "name" : "Nightscape / Astro",
+    "typ" : "GENRE",
+    "region" : null,
+    "tags" : [ "#nightscapes", "#nightphotography", "#nightshooters", "#nightskyphotography", "#auroraborealis", "#polarlicht" ]
+  }, {
+    "id" : "wald",
+    "name" : "Wald / Bäume",
+    "typ" : "GENRE",
+    "region" : null,
+    "tags" : [ "#waldfotografie", "#treesofinstagram", "#imwaldunterwegs", "#forestbathing", "#waldbaden" ]
+  }, {
+    "id" : "macro",
+    "name" : "Macro / Natur-Detail",
+    "typ" : "GENRE",
+    "region" : null,
+    "tags" : [ "#macrophotography", "#macro_captures", "#closeupphotography", "#dewdrops" ]
+  }, {
+    "id" : "stimmung",
+    "name" : "Wetter / Jahreszeit",
+    "typ" : "GENRE",
+    "region" : null,
+    "tags" : [ "#morgenstimmung", "#herbststimmung", "#winterwonderland", "#frühlingserwachen", "#morgenspaziergang" ]
+  }, {
+    "id" : "reichweite",
+    "name" : "Internationale Reichweite (sparsam)",
+    "typ" : "REICHWEITE",
+    "region" : null,
+    "tags" : [ "#nature", "#naturelovers", "#photography", "#beautifuldestinations", "#explore" ]
+  } ],
+  "accounts" : [ {
+    "id" : "accounts-siegerland",
+    "name" : "Regional / Presse (Siegerland)",
+    "region" : "siegerland",
+    "handles" : [ "@siwierleben", "@suedwestfalen_echt", "@discoversiwi", "@topmagazin_siwi", "@siegenerzeitung", "@kreis_siwi", "@radiosiegen" ]
+  }, {
+    "id" : "accounts-nrw",
+    "name" : "NRW allgemein",
+    "region" : "nrw",
+    "handles" : [ "@ig_nrw", "@deinnrw", "@visitnrw", "@nordrhein_westfalen", "@mein_nrw" ]
+  }, {
+    "id" : "accounts-sauerland",
+    "name" : "Sauerland",
+    "region" : "sauerland",
+    "handles" : [ "@discover_sauerland", "@rothaarsteig.de" ]
+  }, {
+    "id" : "accounts-equipment",
+    "name" : "Equipment / Community",
+    "region" : null,
+    "handles" : [ "@sonyalpha", "@sony.deutschland", "@germanalphas" ]
+  } ]
+}

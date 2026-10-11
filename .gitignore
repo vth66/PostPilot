@@ -1,0 +1,23 @@
+# Maven
+target/
+
+# Daten der laufenden Anwendung — Fotos, Entwurf, Exporte, Archiv gehören niemandem außer
+# der eigenen NAS. Nichts davon darf versehentlich in das Repository geraten.
+data/
+*.jpg
+*.jpeg
+*.png
+!src/main/resources/static/**/*.png
+
+# Werkzeuge
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Betriebssystem
+Thumbs.db
+desktop.ini
+.DS_Store

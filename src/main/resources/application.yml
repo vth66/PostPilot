@@ -1,0 +1,32 @@
+server:
+  # Unter welcher Portnummer die Oberfläche erreichbar ist: http://localhost:8080
+  # Ändern per Umgebungsvariable SERVER_PORT oder Start mit --server.port=9090
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: postpilot
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          # Ohne das liefert der Browser nach einem Update weiter die alte app.js aus
+          # und es sieht so aus, als hätte das Hochladen nichts bewirkt.
+          no-cache: true
+          must-revalidate: true
+  servlet:
+    multipart:
+      # Fotos aus der Kamera sind schnell 20-40 MB groß
+      max-file-size: 80MB
+      max-request-size: 240MB
+
+postpilot:
+  # Wohin Fotos, Stammorte und fertige Zuschnitte geschrieben werden.
+  # Leer lassen = Benutzerprofil (%APPDATA%\PostPilot bzw. ~/.postpilot).
+  # Im Docker-Container wird hier /data gesetzt, damit die Daten im gemounteten Ordner landen.
+  data-dir: ${POSTPILOT_DATA_DIR:}
+
+logging:
+  level:
+    root: INFO
+    de.vothography.postpilot: INFO

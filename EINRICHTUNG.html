@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PostPilot einrichten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --ink: #16181F;
+    --ink-dim: #4A4F5C;
+    --ink-faint: #767C8A;
+    --line: #DFE2E8;
+    --accent: #8A5A0B;
+    --accent-soft: #F7EEDC;
+    --info: #0E6E85;
+    --info-soft: #E5F1F5;
+    --code-bg: #F0F2F6;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15171F;
+      --surface: #1B1D26;
+      --ink: #ECEEF3;
+      --ink-dim: #A9ADBA;
+      --ink-faint: #767C8A;
+      --line: #2A2C36;
+      --accent: #E2A54A;
+      --accent-soft: #2A2214;
+      --info: #4FC3D9;
+      --info-soft: #17262B;
+      --code-bg: #22242E;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 12px 20px;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .name { font-weight: 600; letter-spacing: -0.01em; }
+  .topbar nav { display: flex; gap: 14px; margin-left: auto; font-size: 14px; }
+  .topbar a { color: var(--ink-dim); text-decoration: none; }
+  .topbar a:hover { color: var(--accent); text-decoration: underline; }
+
+  .wrap { max-width: 44rem; margin: 0 auto; padding-block: 40px 72px; padding-left: 20px; padding-right: 20px; }
+
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; text-wrap: balance; }
+  .lede { color: var(--ink-dim); font-size: 1.05rem; margin: 0 0 32px; }
+
+  h2 {
+    font-size: 1.35rem; margin: 56px 0 6px; letter-spacing: -0.01em; text-wrap: balance;
+    padding-top: 20px; border-top: 1px solid var(--line);
+  }
+  h2:first-of-type { border-top: 0; padding-top: 0; }
+  h3 { font-size: 1.02rem; margin: 32px 0 6px; letter-spacing: -0.005em; }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  a { color: var(--accent); }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 4px;
+  }
+
+  .step { display: grid; grid-template-columns: 2.6rem 1fr; gap: 4px 14px; margin: 30px 0; }
+  .step > .marker {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.8rem; color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px; padding: 3px 0; text-align: center; height: fit-content;
+  }
+  .step > .body > :first-child { margin-top: 0; }
+  .step > .body > :last-child { margin-bottom: 0; }
+  .step h3 { margin-top: 0; }
+
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 14px; margin: 0 0 14px;
+    overflow-x: auto;
+  }
+  code {
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.86em;
+  }
+  p code, li code, td code {
+    background: var(--code-bg); border: 1px solid var(--line);
+    border-radius: 4px; padding: 1px 5px;
+  }
+
+  .note {
+    background: var(--info-soft); border: 1px solid color-mix(in srgb, var(--info) 30%, transparent);
+    border-radius: 10px; padding: 14px 16px; margin: 0 0 18px;
+  }
+  .note .eyebrow { color: var(--info); }
+  .note > :last-child { margin-bottom: 0; }
+
+  .trouble { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 14px; }
+  .trouble > :last-child { margin-bottom: 0; }
+  .trouble dt { font-weight: 600; margin-bottom: 2px; }
+  .trouble dd { margin: 0 0 14px; color: var(--ink-dim); }
+  .trouble dd:last-child { margin-bottom: 0; }
+
+  .tree { color: var(--ink-dim); }
+
+  footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 0.86rem; }
+
+  @media print {
+    .topbar { display: none; }
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .wrap { max-width: none; padding: 0; }
+    pre, .note, .trouble { break-inside: avoid; }
+    h2 { break-after: avoid; }
+    .step { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="name">PostPilot einrichten</span>
+  <nav>
+    <a href="#lokal">Auf dem PC</a>
+    <a href="#nas">Auf der Synology</a>
+  </nav>
+</div>
+
+<div class="wrap">
+
+  <h1>PostPilot einrichten</h1>
+  <p class="lede">Beide Wege von Grund auf: einmal lokal auf dem PC, einmal als Dauerläufer
+    auf der Synology DS218+ unter DSM 7.1. Vorwissen über Docker oder Webserver ist nicht nötig.</p>
+
+  <h2>Was hier eigentlich läuft</h2>
+  <p>Die Anwendung ist ein einziges Java-Programm mit eingebautem Webserver. Startest du es,
+    horcht es auf Port 8080 und liefert die Oberfläche an den Browser aus. Es gibt keinen
+    externen Webserver, keine Datenbank und nichts zu registrieren. „Port 8080“ ist dabei nur
+    eine Hausnummer auf deinem Rechner — <code>http://localhost:8080</code> heißt
+    „auf diesem Rechner, Tür 8080“.</p>
+  <p>Alle Daten — Fotos, Stammorte, fertige Zuschnitte — liegen in <em>einem</em> Ordner. Wo der
+    liegt, steuert eine einzige Einstellung. Das ist der wichtigste Unterschied zwischen beiden
+    Varianten: lokal liegt er im Benutzerprofil, im Container zeigt er auf einen Ordner der NAS.</p>
+
+  <h2 id="lokal">Variante A — lokal auf dem PC</h2>
+
+  <div class="step">
+    <div class="marker">A1</div>
+    <div class="body">
+      <h3>Java installieren</h3>
+      <p>Du brauchst ein JDK 21. Meldet <code>java -version</code> schon <code>21.x</code>,
+        überspring diesen Schritt. Sonst Temurin 21 von
+        <a href="https://adoptium.net">adoptium.net</a> holen und mit den Vorgaben installieren.</p>
+      <p>Prüfen: Windows-Taste drücken, <code>cmd</code> tippen, Enter, dann eingeben:</p>
+      <pre><code>java -version</code></pre>
+      <p>Es muss <code>openjdk version "21…</code> erscheinen. Steht dort 17 oder 8, ist noch eine
+        ältere Version voreingestellt — dann in der Systemsteuerung unter „Umgebungsvariablen“
+        <code>JAVA_HOME</code> auf den Ordner von Java 21 zeigen lassen.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">A2</div>
+    <div class="body">
+      <h3>Das Programm bauen</h3>
+      <p>Aus dem Quellcode wird eine einzelne Datei <code>postpilot.jar</code>. Zwei Wege,
+        such dir einen aus.</p>
+
+      <p class="eyebrow">Weg 1 — in IntelliJ, ohne weitere Installation</p>
+      <ol>
+        <li>IntelliJ öffnen, „Open“ wählen, den entpackten Projektordner auswählen (den mit der
+          <code>pom.xml</code> darin), mit „Trust Project“ bestätigen.</li>
+        <li>Rechts am Rand auf den Reiter „Maven“ klicken.</li>
+        <li>Dort <code>postpilot</code> → <code>Lifecycle</code> aufklappen und auf
+          <code>package</code> doppelklicken.</li>
+        <li>Beim ersten Mal lädt Maven die Bibliotheken aus dem Internet — das dauert ein paar
+          Minuten. Am Ende steht unten „BUILD SUCCESS“.</li>
+      </ol>
+
+      <p class="eyebrow">Weg 2 — auf der Kommandozeile</p>
+      <p>Setzt ein installiertes Maven voraus.</p>
+      <pre><code>cd C:\dev\postpilot
+mvn package</code></pre>
+      <p>Fertig ist in beiden Fällen die Datei <code>target\postpilot.jar</code>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">A3</div>
+    <div class="body">
+      <h3>Starten</h3>
+      <pre><code>java -jar target\postpilot.jar</code></pre>
+      <p>Im Fenster rauschen ein paar Zeilen durch. Wichtig ist
+        <code>Tomcat started on port 8080</code> und darunter die Angabe deines
+        Datenverzeichnisses. Fragt die Windows-Firewall beim ersten Start, reicht „Abbrechen“ —
+        für <code>localhost</code> braucht es keine Freigabe.</p>
+      <p>Dann im Browser aufrufen:</p>
+      <pre><code>http://localhost:8080</code></pre>
+      <p>Die JAR-Datei kannst du hinlegen, wohin du willst — sie ist selbstständig. Ein
+        Doppelklick startet sie allerdings ohne sichtbares Fenster; nimm lieber die kleine
+        Startdatei aus A6.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">A4</div>
+    <div class="body">
+      <h3>Beenden</h3>
+      <p>Im Konsolenfenster <code>Strg + C</code> drücken oder das Fenster schließen. Damit ist
+        die Anwendung weg; die Daten bleiben liegen.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">A5</div>
+    <div class="body">
+      <h3>Wo deine Daten liegen</h3>
+      <pre class="tree"><code>%APPDATA%\PostPilot\
+   fotos\           die hochgeladenen Originale
+   export\          die fertigen Zuschnitte, nach Datum sortiert
+   stammorte.json   deine Ortsliste, im Editor bearbeitbar</code></pre>
+      <p><code>%APPDATA%</code> kannst du im Explorer direkt in die Adresszeile tippen. Der Ordner
+        wird beim ersten Start angelegt, die Stammorte-Datei mit fünf Beispielorten aus deiner
+        Ecke gefüllt.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">A6</div>
+    <div class="body">
+      <h3>Einstellungen, die du vielleicht brauchst</h3>
+      <p>Alles lässt sich beim Start mitgeben, ohne im Code etwas zu ändern:</p>
+      <pre><code>:: anderer Port, falls 8080 belegt ist
+java -jar postpilot.jar --server.port=9090
+
+:: Daten woanders ablegen, etwa auf einer zweiten Platte
+java -jar postpilot.jar --postpilot.data-dir=D:\PostPilot</code></pre>
+      <p>Damit du das nicht jedes Mal tippst, leg neben die JAR-Datei eine Textdatei
+        <code>start-postpilot.cmd</code> mit diesem Inhalt:</p>
+      <pre><code>@echo off
+start "" http://localhost:8080
+java -jar "%~dp0postpilot.jar"</code></pre>
+      <p>Ein Doppelklick startet die App und öffnet gleich den Browser. Soll sie bei jedem
+        Anmelden bereitstehen: <code>Windows-Taste + R</code>, <code>shell:startup</code> eingeben
+        und eine Verknüpfung dieser Datei in den Ordner legen.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">A7</div>
+    <div class="body">
+      <h3>Wenn etwas klemmt</h3>
+      <dl class="trouble">
+        <dt>„Port 8080 was already in use“</dt>
+        <dd>Ein anderes Programm hat die Hausnummer belegt. Starte mit
+          <code>--server.port=9090</code> und ruf <code>http://localhost:9090</code> auf.</dd>
+        <dt>„UnsupportedClassVersionError“</dt>
+        <dd>Es läuft noch ein altes Java. Prüf <code>java -version</code> (siehe A1).</dd>
+        <dt>Die Seite bleibt weiß</dt>
+        <dd>Schau ins Konsolenfenster. Steht dort eine rote Fehlermeldung, schick sie mir;
+          sonst hilft <code>Strg + F5</code> im Browser.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h2 id="nas">Variante B — auf der Synology DS218+ (DSM 7.1)</h2>
+  <p>Hier läuft die App dauerhaft auf der NAS: Sie startet nach einem Stromausfall von selbst
+    wieder, und du erreichst sie aus dem ganzen Heimnetz, auch vom Handy.</p>
+
+  <div class="note">
+    <div class="eyebrow">Warum dieser Weg und nicht Docker Desktop</div>
+    <p><strong>Docker Desktop</strong> ist ein Programm für Windows, das auf dem PC eine kleine
+      Linux-Umgebung startet, damit du dort Container <em>bauen</em> und laufen lassen kannst.
+      Man braucht es nur, wenn man aus Quellcode ein fertiges Container-Abbild backen will.
+      <strong>Das umgehen wir:</strong> Statt ein eigenes Abbild zu bauen, nehmen wir ein
+      fertiges Java-Abbild aus dem Internet und legen deine <code>postpilot.jar</code> einfach
+      in einen Ordner, den der Container mitlesen darf. Damit brauchst du weder Docker Desktop
+      noch SSH noch einen Build auf der NAS — alles passiert in der DSM-Oberfläche.</p>
+    <p>Das passt auch besser zur DS218+: Mit Celeron-Prozessor und 2 GB Speicher wäre ein
+      Maven-Build im Container quälend langsam und könnte mangels Speicher abbrechen. Und der
+      Container Manager mit seinen Compose-Projekten, den die meisten Anleitungen voraussetzen,
+      existiert erst ab DSM 7.2 — du bist auf 7.1.1.</p>
+  </div>
+
+  <div class="step">
+    <div class="marker">B1</div>
+    <div class="body">
+      <h3>Docker-Paket installieren</h3>
+      <p>Paket-Zentrum öffnen, nach <strong>Docker</strong> suchen, installieren. Auf DSM 7.1
+        heißt das Paket noch schlicht so; der <em>Container Manager</em> aus neueren Anleitungen
+        ist dasselbe in neu und gibt es für dich noch nicht.</p>
+      <p>Bei der Installation legt das Paket einen freigegebenen Ordner <code>docker</code> an.
+        Siehst du ihn danach in der File Station neben <code>home</code> und <code>homes</code>
+        nicht, leg ihn selbst an: Systemsteuerung → Gemeinsamer Ordner → Erstellen, Name
+        <code>docker</code>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B2</div>
+    <div class="body">
+      <h3>Ordner anlegen</h3>
+      <p>In der File Station unter <code>docker</code> diese zwei Ordner erstellen:</p>
+      <pre class="tree"><code>docker/
+   postpilot/
+      app/     hier kommt die postpilot.jar hinein
+      data/    hier legt die App Fotos, Stammorte und Exporte ab</code></pre>
+      <p>Die Trennung ist Absicht: <code>app</code> ist das Programm und wird bei jedem Update
+        überschrieben, <code>data</code> sind deine Inhalte und bleiben unangetastet.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B3</div>
+    <div class="body">
+      <h3>Programm bauen und hinüberkopieren</h3>
+      <p>Auf dem PC im Projektordner bauen, wie in A2 beschrieben:</p>
+      <pre><code>cd D:\_AI\Projects\PostPilot
+mvn package</code></pre>
+      <p>Die entstandene Datei <code>target\postpilot.jar</code> in der File Station nach
+        <code>docker/postpilot/app/</code> hochladen — ziehen und fallen lassen reicht. Der Name
+        muss genau <code>postpilot.jar</code> bleiben, er taucht gleich im Startbefehl auf.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B4</div>
+    <div class="body">
+      <h3>Java-Abbild herunterladen</h3>
+      <p>Docker öffnen, links auf <strong>Registrierung</strong>. Oben nach
+        <code>eclipse-temurin</code> suchen, den Treffer doppelklicken. Es erscheint eine
+        Auswahl der Varianten („Tags“) — nimm <strong><code>21-jre</code></strong> und bestätige.</p>
+      <p>Der Download läuft im Hintergrund und ist etwa 200 MB groß. Unter
+        <strong>Abbild</strong> siehst du, wann er fertig ist.</p>
+      <p>Das ist eine fertige Java-21-Laufzeit von Eclipse — dieselbe, die du auch auf dem PC
+        installiert hast, nur eben als Container-Abbild. Dein Programm steckt nicht darin, es
+        wird gleich von außen hineingereicht.</p>
+
+      <div class="note">
+        <div class="eyebrow">Wenn „Registrierung konnte nicht abgefragt werden“ erscheint</div>
+        <p>Die Suche im Reiter „Registrierung“ fragt Docker Hub über das Internet ab. Scheitert
+          das, liegt es fast immer an der Namensauflösung der NAS, nicht an Docker. Prüfe in
+          dieser Reihenfolge:</p>
+        <p><strong>1. Kommt die NAS überhaupt ins Internet?</strong> Paket-Zentrum öffnen — lädt
+          die Paketliste? Systemsteuerung → Aktualisieren &amp; Wiederherstellen → „Nach
+          Updates suchen“ — antwortet es? Scheitert beides, ist es ein Netzproblem und nicht
+          Docker.</p>
+        <p><strong>2. DNS eintragen.</strong> Systemsteuerung → Netzwerk → Reiter
+          „Netzwerkschnittstelle“ → LAN markieren → Bearbeiten → „Manuell konfigurieren“ und als
+          DNS-Server die Adresse deines Routers eintragen (meist <code>192.168.x.1</code>),
+          alternativ <code>9.9.9.9</code>. Ein vertippter oder leerer DNS-Eintrag ist die mit
+          Abstand häufigste Ursache.</p>
+        <p><strong>3. Uhrzeit prüfen.</strong> Systemsteuerung → Regionale Optionen → Zeit. Geht
+          die Uhr der NAS deutlich falsch, scheitern verschlüsselte Verbindungen, und die
+          Abfrage bricht genauso ab.</p>
+        <p><strong>4. Docker-Paket neu starten</strong> (Paket-Zentrum → Docker → Aktion →
+          Beenden, dann Starten) und die Suche erneut versuchen.</p>
+        <p>Kommt die NAS nachweislich ins Internet und nur die Suche bleibt stur, lade das
+          Abbild per SSH — das umgeht die Oberfläche vollständig. Wie du dich verbindest und
+          wo der Befehl eingetippt wird, steht Schritt für Schritt unter <strong>B9</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B5</div>
+    <div class="body">
+      <h3>Container anlegen</h3>
+      <p>Unter <strong>Abbild</strong> das Abbild <code>eclipse-temurin:21-jre</code> markieren
+        und auf <strong>Starten</strong> klicken. Es öffnet sich ein Assistent, der dich über
+        mehrere Seiten führt. Wichtig: Die beiden Ordner aus B2 müssen schon existieren und die
+        <code>postpilot.jar</code> aus B3 muss in <code>app/</code> liegen — sonst lässt sich
+        weiter unten nichts auswählen und der Container stoppt gleich wieder.</p>
+
+      <p class="eyebrow">Seite „Netzwerk“</p>
+      <p>Nichts ändern. <code>bridge</code> ist angehakt, das ist richtig. → <strong>Weiter</strong></p>
+
+      <p class="eyebrow">Seite „Allgemeine Einstellungen“</p>
+      <p>Containername: <code>postpilot</code>. Haken bei <strong>Automatischen Neustart
+        aktivieren</strong> — damit kommt die App nach einem Neustart der NAS von selbst wieder
+        hoch. „Ressourcenbegrenzung aktivieren“ bleibt aus.</p>
+      <p>Auf derselben Seite gibt es die Schaltfläche <strong>Erweiterte Einstellungen</strong>.
+        Dort hinein, denn hier stehen zwei Dinge, ohne die der Container nicht startet:</p>
+      <p>Das Feld <strong>Befehl ausführen</strong> (je nach DSM-Fassung „Befehl“, im Reiter
+        „Umgebung“) bekommt genau das:</p>
+      <pre><code>java -Xmx768m -jar /app/postpilot.jar</code></pre>
+      <p>Und in der Tabelle der <strong>Umgebungsvariablen</strong> zwei Zeilen anlegen:</p>
+      <pre><code>POSTPILOT_DATA_DIR = /data
+TZ                 = Europe/Berlin</code></pre>
+      <p>Das <code>-Xmx768m</code> deckelt den Speicherhunger von Java. Auf einer NAS mit 2 GB
+        ist das nötig, sonst kann sich die App beim Verkleinern großer Fotos zu viel nehmen.
+        Mit <strong>Speichern</strong> zurück, dann → <strong>Weiter</strong></p>
+
+      <p class="eyebrow">Seite „Port-Einstellungen“</p>
+      <p>Lokaler Port <strong>8095</strong>, Container-Port <strong>8080</strong>, Typ TCP.
+        Steht beim lokalen Port „Auto“, die 8095 von Hand eintragen. Die 8080 belegt DSM
+        teilweise selbst, daher die krumme Zahl. → <strong>Weiter</strong></p>
+
+      <p class="eyebrow">Seite „Volume-Einstellungen“</p>
+      <p>Zweimal auf <strong>Ordner hinzufügen</strong>:</p>
+      <pre><code>docker/postpilot/app    →  Mount-Pfad /app     (Haken bei „Schreibgeschützt“)
+docker/postpilot/data   →  Mount-Pfad /data    (kein Haken)</code></pre>
+      <p>Links der echte Ordner auf der NAS, rechts der Name, unter dem der Container ihn sieht.
+        → <strong>Weiter</strong></p>
+
+      <p class="eyebrow">Seite „Zusammenfassung“</p>
+      <p>Alles kontrollieren, den Haken bei „Diesen Container nach dem Erstellen des Assistenten
+        ausführen“ stehen lassen, <strong>Fertig</strong>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B6</div>
+    <div class="body">
+      <h3>Aufrufen</h3>
+      <p>Unter <strong>Container</strong> sollte <code>postpilot</code> jetzt auf „Wird
+        ausgeführt“ stehen. Im Browser auf einem beliebigen Gerät im Heimnetz:</p>
+      <pre><code>http://ITwareNAS:8095</code></pre>
+      <p>Klappt der Name nicht, nimm die IP-Adresse der NAS (Systemsteuerung → Info-Center →
+        Netzwerk), etwa <code>http://192.168.1.50:8095</code>. Auf dem Handy lohnt sich „Zum
+        Startbildschirm hinzufügen“ — dann sieht es aus wie eine App.</p>
+      <p>Beim ersten Start legt die App in <code>docker/postpilot/data</code> die Unterordner
+        <code>fotos</code> und <code>export</code> sowie die Datei <code>stammorte.json</code>
+        an. Siehst du die in der File Station, hat alles geklappt.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B7</div>
+    <div class="body">
+      <h3>Aktualisieren, wenn sich der Code ändert</h3>
+      <p>Auf dem PC neu bauen, die neue <code>postpilot.jar</code> nach
+        <code>docker/postpilot/app/</code> hochladen und die alte überschreiben. Dann in Docker
+        unter <strong>Container</strong> den Container markieren, <strong>Aktion → Neu
+        starten</strong>. Mehr ist nicht nötig — das Abbild bleibt, nur dein Programm ist neu.</p>
+      <p>Der Ordner <code>data</code> wird dabei nicht angefasst. Nimm ihn trotzdem in Hyper
+        Backup mit auf.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B8</div>
+    <div class="body">
+      <h3>Wenn etwas klemmt</h3>
+      <p>Das Protokoll findest du unter <strong>Container</strong> → Container markieren →
+        <strong>Details</strong> → Reiter <strong>Protokoll</strong>. Dort steht im Normalfall
+        dieselbe Startmeldung wie auf dem PC.</p>
+      <dl class="trouble">
+        <dt>„Registrierung konnte nicht abgefragt werden“ beim Suchen eines Abbilds</dt>
+        <dd>Kein Docker-Fehler, sondern meist DNS auf der NAS — die vier Prüfschritte stehen
+          im Kasten bei B4, dazu der Weg über <code>docker pull</code> per SSH.</dd>
+        <dt>Der Container startet und stoppt sofort wieder</dt>
+        <dd>Fast immer stimmt der Startbefehl oder der Dateiname nicht. Prüfe, ob die Datei
+          wirklich <code>postpilot.jar</code> heißt und direkt in <code>app/</code> liegt (nicht
+          in einem Unterordner <code>target</code>), und ob im Befehl
+          <code>/app/postpilot.jar</code> steht — mit führendem Schrägstrich.</dd>
+        <dt>„Unable to find image … manifest unknown“</dt>
+        <dd>Der Tag wurde nicht mitgeladen. Unter <strong>Registrierung</strong> noch einmal
+          <code>eclipse-temurin</code> suchen und gezielt <code>21-jre</code> wählen, nicht
+          <code>latest</code>.</dd>
+        <dt>„Permission denied“ oder die App kann nichts speichern</dt>
+        <dd>Dem Ordner <code>data</code> in der File Station Schreibrechte geben (Rechtsklick →
+          Eigenschaften → Berechtigungen). Der Container läuft als root und darf normalerweise
+          schreiben; wenn nicht, liegt es an den Ordnerrechten.</dd>
+        <dt>Die Seite lädt nicht</dt>
+        <dd>Läuft der Container überhaupt? Sonst Port prüfen: Im Browser muss die 8095 stehen,
+          im Container-Port die 8080. Beides vertauscht ist der häufigste Zahlendreher.</dd>
+        <dt>Alles ist zäh beim Hochladen großer Fotos</dt>
+        <dd>Erwartbar auf dieser Hardware. Die DS218+ skaliert ein 24-Megapixel-Foto spürbar
+          langsamer als dein PC. Wenn es stört, bleib für die Arbeit am PC und nutz die NAS nur
+          als Dauerläufer.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B9</div>
+    <div class="body">
+      <h3>SSH: wie du überhaupt auf die Kommandozeile der NAS kommst</h3>
+      <p>DSM selbst hat keine Kommandozeile — Befehle für die NAS tippst du in einer
+        SSH-Sitzung, die du von deinem PC aus aufbaust. Das geht so:</p>
+      <ol>
+        <li>In DSM: Systemsteuerung → <strong>Terminal &amp; SNMP</strong> → Haken bei
+          „SSH-Dienst aktivieren“, Port 22, <strong>Übernehmen</strong>.</li>
+        <li>Am PC die <strong>PowerShell</strong> öffnen (Windows-Taste, „PowerShell“ tippen,
+          Enter). Das ist dein Rechner, noch nicht die NAS.</li>
+        <li>Verbinden — mit deinem DSM-Administrator-Konto:
+          <pre><code>ssh deinbenutzer@ITwareNAS</code></pre>
+          Klappt der Name nicht, nimm die IP: <code>ssh deinbenutzer@192.168.x.y</code>.
+          Beim ersten Mal fragt SSH nach dem Fingerabdruck — mit <code>yes</code> bestätigen.
+          Dann das DSM-Passwort eingeben: <strong>es erscheinen dabei keine Zeichen, auch keine
+          Sternchen</strong>. Einfach tippen und Enter.</li>
+        <li>Steht links im Prompt der NAS-Name (etwa <code>deinbenutzer@ITwareNAS:~$</code>),
+          läuft ab jetzt alles auf der NAS.</li>
+      </ol>
+      <p>Dann das Abbild laden — <code>sudo</code> fragt noch einmal nach demselben Passwort,
+        wieder unsichtbar:</p>
+      <pre><code>sudo docker pull eclipse-temurin:21-jre</code></pre>
+      <p>Es laufen Fortschrittszeilen durch; am Ende steht
+        <code>Status: Downloaded newer image for eclipse-temurin:21-jre</code>. Mit
+        <code>sudo docker images</code> kannst du es nachsehen, mit <code>exit</code> die
+        Sitzung beenden. Danach liegt das Abbild in DSM unter „Abbild“ und du machst bei
+        B5 weiter.</p>
+      <p>Meldet die Shell <code>docker: command not found</code>, nimm den vollen Pfad:
+        <code>sudo /usr/local/bin/docker pull eclipse-temurin:21-jre</code>. Verlangt die
+        Anmeldung einen Bestätigungscode, hat dein Konto Zwei-Faktor-Schutz — dann den Code aus
+        der App eingeben. Und <code>sudo</code> funktioniert nur, wenn dein Konto in der Gruppe
+        <code>administrators</code> ist.</p>
+
+      <p class="eyebrow">Alles in einem Befehl statt über die Oberfläche</p>
+      <p>Wenn du schon in der Sitzung bist, kannst du dir B5 auch komplett sparen und den
+        Container direkt anlegen:</p>
+      <pre><code>sudo docker run -d --name postpilot --restart unless-stopped \
+  -p 8095:8080 \
+  -v /volume1/docker/postpilot/app:/app:ro \
+  -v /volume1/docker/postpilot/data:/data \
+  -e POSTPILOT_DATA_DIR=/data -e TZ=Europe/Berlin \
+  eclipse-temurin:21-jre java -Xmx768m -jar /app/postpilot.jar</code></pre>
+      <p>Die Ordner aus B2 und die JAR aus B3 müssen trotzdem vorhanden sein. Danach taucht der
+        Container ganz normal in der Docker-Oberfläche auf.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="marker">B10</div>
+    <div class="body">
+      <h3>Später, falls du doch auf DSM 7.2 oder 7.3 gehst</h3>
+      <p>Dann bekommst du den Container Manager mit Compose-Projekten, und die beiden Dateien
+        <code>Dockerfile</code> und <code>docker-compose.yml</code> im Projekt werden nutzbar:
+        Projektordner auf die NAS kopieren, Container Manager → Projekt → Erstellen, vorhandene
+        <code>docker-compose.yml</code> verwenden. Das baut die App selbst im Container, lädt
+        also kein fertiges Java-Abbild von außen.</p>
+      <p>Für die DS218+ ist das trotzdem nicht der bessere Weg — der Build braucht dort viel Zeit
+        und Speicher. Die beiden Dateien bleiben vor allem für den Fall liegen, dass die App mal
+        auf kräftigerer Hardware läuft.</p>
+    </div>
+  </div>
+
+
+  <h2>Beide Varianten gleichzeitig?</h2>
+  <p>Geht problemlos — es sind zwei getrennte Installationen mit getrennten Daten. Praktisch ist
+    die Aufteilung: auf dem PC entwickeln und ausprobieren, auf der NAS die Fassung, die du
+    wirklich benutzt.</p>
+
+  <h2>Was noch nicht drin ist</h2>
+  <p>Die Planung über Metricool fehlt bewusst noch. Dafür sind zwei Dinge zu klären: Metricool
+    holt Bilder nur von einer öffentlich erreichbaren Adresse ab, und einen Instagram-Standort
+    nimmt es nur bei automatischer Veröffentlichung an. Bis dahin ist der Weg: in PostPilot
+    zuschneiden, exportieren, und die Dateien aus dem <code>export</code>-Ordner von Hand in den
+    Metricool-Planer ziehen.</p>
+
+  <footer>PostPilot · Einrichtung für lokalen Betrieb und Synology · dieselbe Anleitung liegt im
+    Projekt als <code>SETUP.md</code></footer>
+
+</div>
+</body>
+</html>

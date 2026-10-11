@@ -1,0 +1,12 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "Zuschnitt & Vorschau", "is_interactive": true },
+    { "file": "Schedule.dc.html", "x": 1560, "y": 70, "w": 900, "h": 760, "title": "Terminplan-Dialog", "is_interactive": true }
+  ],
+  "annotations": [
+    { "id": "note-scope", "x": 0, "y": -110, "w": 480, "text": "Mockup-Phase 1: Upload/Zuschnitt inkl. Pano-Split, Instagram-Vorschau (Feed & Story) und Caption/Hashtag-Panel.\nStories als eigener Flow sowie Audio/Musik (Punkt 5 & 6) folgen in einem späteren Entwurf." },
+    { "id": "note-main", "x": 0, "y": 940, "w": 520, "text": "Klickbar: Format-Tabs, Pano-Split-Stepper, Fotoauswahl, Caption-Varianten, Feed/Story-Vorschau.\nFotos sind gezeichnete Platzhalter, keine echten Aufnahmen." },
+    { "id": "note-schedule", "x": 1560, "y": 850, "w": 480, "text": "Klickbar: Wochentag, Zeit-Vorschlag, Automatisch-veröffentlichen-Schalter (Standard: aus).\nZeiten, Begründungen und bereits geplante Tage sind Beispieldaten." }
+  ],
+  "launch": { "view": "canvas" }
+}
