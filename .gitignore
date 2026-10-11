@@ -17,6 +17,14 @@ data/
 .classpath
 .project
 
+# Mockups aus der Entwurfsphase. Sie bleiben auf der Platte liegen, gehören aber nicht ins
+# Repository: postpilot-mockup.html allein ist mit 2,6 MB Base64 größer als der ganze
+# Quellcode. Wieder aufnehmen heißt: diese Zeile löschen.
+entwurf/
+
+# Hilfsskript für den ersten Push — gehört nicht ins Repository
+_github-push.cmd
+
 # Betriebssystem
 Thumbs.db
 desktop.ini
